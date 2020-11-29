@@ -22,6 +22,6 @@ class MovieService {
   }  
   
   String getMovieUrl(String movieImageId) {    
-    return 'https://image.tmdb.org/t/p/$movieImageId';
+    return 'https://image.tmdb.org/t/p/w185$movieImageId';
   }  
 }
