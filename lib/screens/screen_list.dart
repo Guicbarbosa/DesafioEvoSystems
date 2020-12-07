@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'dart:ffi';
+import 'package:desafio/screens/screen_details.dart';
 import 'package:desafio/services/tmdb.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +15,11 @@ class _State extends State<Challenge> {
 
   MovieService movieService = MovieService();
 
+  int getYear(String data) {
+    var newDate = data.split("-");
+    return int.parse(newDate[0]);
+  }
+
   Future loadMovies() async {
     var result = await movieService.getList();
     for (var item in result['results']) {
@@ -25,14 +32,29 @@ class _State extends State<Challenge> {
 
   Future searchMovie(String movieName) async {
     var result = await movieService.getMovieByName(movieName);
-      setState(() {        
-        widget.movies.clear();
-      });
-    for (var item in result['results']) {
-      setState(() {        
+    setState(() {
+      widget.movies.clear();
+    });
+
+    List<dynamic> tmdbResult = result['results'];
+
+    log(tmdbResult.toString());
+
+    // ordernar por data de lançamento decrescente
+    tmdbResult.sort((b, a) =>
+        getYear(a['release_date']).compareTo(getYear(b['release_date'])));
+
+    // Ordernar por data de lançamento crescente
+    //tmdbResult.sort((b, a) => getYear(a['release_date']).compareTo(getYear(b['release_date'])));
+
+    // Ordernar por titulo
+    //tmdbResult.sort((a, b) => a['original_title'].compareTo(b['original_title']));
+
+    for (var item in tmdbResult) {
+      setState(() {
         widget.movies.add(item);
       });
-      log(item.toString());
+      //log(item.toString());
     }
   }
 
@@ -57,14 +79,20 @@ class _State extends State<Challenge> {
                   itemCount: widget.movies.length,
                   itemBuilder: (BuildContext ctxt, int index) {
                     final movie = widget.movies[index];
-                    return _card(movie['title'], movie['poster_path']);
+                    return _card(
+                        movie['title'],
+                        movie['poster_path'],
+                        movie['overview'],
+                        movie['release_date'],
+                        movie['vote_average']);
                   }),
             )
           ],
         ));
   }
 
-  _card(String name, String imageId) {
+  _card(String name, String imageId, String resumo, String datalancamento,
+      double avaliacao) {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: Center(
@@ -86,7 +114,11 @@ class _State extends State<Challenge> {
                                   style: TextStyle(
                                       fontSize: 25, color: Colors.white))),
                           onPressed: () {
-                            log(name);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Details(name, imageId,
+                                        resumo, datalancamento, avaliacao)));
                           },
                         ),
                       ],
