@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: Challenge(),
+      home: Challenge(),  //Redireciona para página challenge (screen_list)
     );
   }
 }

@@ -1,14 +1,16 @@
+// Bibliotecas Importadas
 import 'dart:developer';
 import 'dart:ffi';
 import 'package:desafio/services/tmdb.dart';
 import 'package:flutter/material.dart';
 
+// Declaração da Classe 
 class Details extends StatefulWidget {
   String name;
   String imageId;
   String resumo;
   String datalancamento;
-  double avaliacao;
+  dynamic avaliacao;
 
   //Injeção de dependencia - Construtor
   Details(name, imageId, resumo, datalancamento, avaliacao) {
@@ -22,7 +24,7 @@ class Details extends StatefulWidget {
   @override
   _State createState() => _State();
 }
-
+ // Definição da classe
 class _State extends State<Details> {
   get child => null;
 
@@ -39,7 +41,7 @@ class _State extends State<Details> {
       body: _body(),
     );
   }
-
+//Conversão da data 
   String convertData(String data) {
     var newDate = data.split("-");
     var day = newDate[2];
@@ -47,13 +49,15 @@ class _State extends State<Details> {
     var year = newDate[0];
     return '$day/$month/$year';
   }
-
+// Corpo da pagina
   _body() {
     var datalancamento = convertData(widget.datalancamento);
     var avaliacao = widget.avaliacao;
     return Container(
-      padding: EdgeInsets.all(10.0),
-      child: Center(
+      padding: EdgeInsets.all(10.0), // Espaçamento entre o conteudo e a borda
+      height: double.infinity, // Definição de altura infinita
+      width: double.infinity, // Definição de comprimento infinito
+      child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Card(
